@@ -1,5 +1,6 @@
 name: CI/CD Pipeline
 
+# Déclencheurs du workflow
 on:
   push:
     branches: [ main, master ]
@@ -16,10 +17,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -48,20 +49,27 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      uses: docker/setup-buildx-action@v3
 
+    # Utilise le token stocké dans les secrets GitHub pour se connecter à Docker Hub
+    # Il faut créer ces secrets dans Settings > Secrets and variables > Actions
     - name: Login to Docker Hub
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        # Utiliser un token d'accès au lieu du mot de passe direct pour plus de sécurité
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/taskflow-app:latest 
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/taskflow-app:latest
+        # Ajouter d'autres tags comme la version ou le SHA du commit
+        # tags: |
+        #   ${{ secrets.DOCKER_HUB_USERNAME }}/taskflow-app:latest
+        #   ${{ secrets.DOCKER_HUB_USERNAME }}/taskflow-app:${{ github.sha }} 
