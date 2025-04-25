@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 
 interface TaskFormProps {
   onAdd: (task: {
@@ -76,7 +76,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAdd, currentDate }) => {
     
     // Create new task with unique ID
     const newTask = {
-      id: Date.now().toString(),
+      id: uuidv4(),
       title,
       date,
       startTime,

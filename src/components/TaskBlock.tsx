@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { calculateTaskPosition, formatTime } from '../utils/timeUtils';
 import TaskTimer from './TaskTimer';
 
@@ -28,7 +28,6 @@ const TaskBlock: React.FC<TaskBlockProps> = ({
   onTimerToggle
 }) => {
   const { left, width } = calculateTaskPosition(task.startTime, task.endTime);
-  const [showPreview, setShowPreview] = useState(false);
   
   const hasAdditionalInfo = task.details || (task.resources && task.resources.length > 0);
   const isTimerActive = activeTimerId === task.id;
@@ -61,8 +60,6 @@ const TaskBlock: React.FC<TaskBlockProps> = ({
         backgroundColor: task.color || '#3498db' 
       }}
       onClick={handleClick}
-      onMouseEnter={() => setShowPreview(true)}
-      onMouseLeave={() => setShowPreview(false)}
     >
       <div className="task-header">
         <div className="task-title">{task.title}</div>
